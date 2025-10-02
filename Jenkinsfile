@@ -17,6 +17,24 @@ pipeline {
                 sh 'npm test'  //run tests
             }
         }
+		stage('Snyk Scan') {
+            steps {
+                echo 'Snyk Security Scan..'
+                sh 'npm install -g snyk'  //install synk CLI
+                sh 'snyk auth 49e25c41-bfc3-4b1a-b16f-dc0791a443ac' //authenticate
+
+                script {
+                        def result = sh(script: 'synk test --severity-threshold=high' , returnStatus: true)
+
+                        if (result != 0) {
+                                error 'pipeline failed'
+                        } else {         //stops pipeline if critical issues
+                                echo 'No high/critical vulnerabilities detected'
+                        }
+                }
+            }
+        }
+
 	
         stage('Build Docker Image') {
             steps {
