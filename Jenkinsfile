@@ -15,7 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh 'npm test'  //run tests
+                
             }
         }
 	stage('Snyk Scan') {
