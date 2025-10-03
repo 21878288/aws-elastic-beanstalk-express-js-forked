@@ -41,7 +41,7 @@ pipeline {
             steps {
                 echo 'Building....'
                 script {
-                	docker.build("bhagya21878288/nodeapp21878288_assignment2":${BUILD_NUMBER}") //build docker image of  app
+                	docker.build("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}") 
 		 }  
                 	
             }
