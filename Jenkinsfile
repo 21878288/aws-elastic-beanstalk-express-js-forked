@@ -1,7 +1,7 @@
 pipeline {
     agent {
     	docker { image 'node:16'       //use node.js 16 as base image
-	         args '-u root:root'  // run as root 
+	         args '-u root:root -v /certs/client:/certs/client:ro'  // run as root 
 		 } 
     	}
 
@@ -38,44 +38,24 @@ pipeline {
             }
         }
 	
-	stage('install Docker CLI'){
+	
+	stage('Build Docker Image') {
 		steps{
-			sh '''
-				curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar xz
-				mv docker/docker /usr/local/bin/docker
-				rm -rf docker
-				docker --version
-			'''
+			echo 'Building docker image of app'
+			sh 'dockerbuild -t bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}'
 		}
 	}
-	
-    stage('Build Docker Image') {
-            steps {
-			  script{
-                echo 'Building Docker image of app....'
-                docker.withServer('tcp://docker:2376', 'dind-certs'){
-					docker.build("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}") 
-					
-				}
-                	
-			  }
-                	
-            }
-        }
 	stage('Push image to docker') {
             steps {
-				script {
                 	echo 'pushing image....'
-                	docker.withServer('tcp://docker:2376', 'dind-certs'){
-                        docker.withRegistry('https://index.docker.io/v1/','dockerhub-cred'){
-							docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push()
-		}  
-
-            }
-        }
-			}
-        
+                	withCredentials([usernamePassword(credentilasId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]){
+						sh '''
+							echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+							docker push bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}
+						'''
+					}
     }
+	}
 	stage('Archive artifacts'){
 		steps{
 		     echo 'Archiving important files'
