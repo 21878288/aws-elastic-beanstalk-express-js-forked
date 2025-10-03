@@ -11,13 +11,14 @@ pipeline {
                 
             }
         }
+     
         stage('Test') {
             steps {
                 echo 'Testing..'
                 sh 'npm test'  //run tests
             }
         }
-		stage('Snyk Scan') {
+	stage('Snyk Scan') {
             steps {
                 echo 'Snyk Security Scan..'
                 sh 'npm install -g snyk'  //install synk CLI
@@ -40,7 +41,8 @@ pipeline {
             steps {
                 echo 'Building....'
                 script {
-                	docker.build("bhagya21878288/nodeapp21878288_assignment2"+$BUILD_NUMBER") }  //build docker image of the app
+                	docker.build("bhagya21878288/nodeapp21878288_assignment2":${BUILD_NUMBER}") //build docker image of  app
+		 }  
                 	
             }
         }
@@ -49,11 +51,18 @@ pipeline {
                 echo 'pushing image....'
                 script {
                         docker.withRegistry('https://index.docker.io/v1/','dockerhub-cred'){
-						docker.image("bhagya21878288/nodeapp21878288_assignment2:$BUILD_NUMBER" }.push()  //push docker image to repo
+						docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push() //push image to dockerhub repo
+		}  
 
             }
         }
 
         
     }
+  }
+  post{
+	always{
+		archiveArtifacts artifacts: 'package.json, package-lock.json, app.js, Dockerfile', fingerprint: true, followSymlinks: false
+	}
+       }
 }
