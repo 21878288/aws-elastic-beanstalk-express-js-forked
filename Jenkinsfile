@@ -38,16 +38,9 @@ pipeline {
             }
         }
 	
-	stage('Install Docker CLI'){
-	   steps{
-		echo 'Installing Docker CLI inside container'
-		sh 'apt-get update && apt-get install -y docker.io'
-		sh 'docker --version'
-
-		}
-	}
 	
-        stage('Build Docker Image') {
+	
+    stage('Build Docker Image') {
             steps {
                 echo 'Building....'
                 script {
