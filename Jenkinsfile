@@ -42,7 +42,7 @@ pipeline {
 		steps{
 			sh '''
 				curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar xz
-				mv docker/docker /usr/bin/docker
+				mv docker/docker /usr/local/bin/docker
 				rm -rf docker
 				docker --version
 			'''
