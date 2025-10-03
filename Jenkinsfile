@@ -51,7 +51,7 @@ pipeline {
                 echo 'pushing image....'
                 script {
                         docker.withRegistry('https://index.docker.io/v1/','dockerhub-cred'){
-						docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push() //push image to dockerhub repo
+						docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push()
 		}  
 
             }
