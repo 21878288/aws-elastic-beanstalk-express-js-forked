@@ -1,6 +1,8 @@
 pipeline {
     agent {
-    	docker { image 'node:16' } //use node.js 16 as base image
+    	docker { image 'node:16'       //use node.js 16 as base image
+	         args '-u root:root'  // run as root so apt-get works below
+		 } 
     	}
 
     stages {
@@ -35,7 +37,15 @@ pipeline {
                 }
             }
         }
+	
+	stage('Install Docker CLI'){
+	   steps{
+		echo 'Installing Docker CLI inside container'
+		sh 'apt-get update && apt-get install -y docker.io'
+		sh 'docker --version'
 
+		}
+	}
 	
         stage('Build Docker Image') {
             steps {
