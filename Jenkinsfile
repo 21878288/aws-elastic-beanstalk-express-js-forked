@@ -41,8 +41,6 @@ pipeline {
 	stage('install Docker CLI'){
 		steps{
 			sh '''
-				apt-get update
-				apt-get install -y curl
 				curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar xz
 				mv docker/docker /usr/bin/docker
 				rm -rf docker
