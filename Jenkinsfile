@@ -44,7 +44,9 @@ pipeline {
 			echo 'Building docker image of app'
 			script{
 				docker.withServer('tcp://docker:2376', 'dind-certs'){
-					def img = docker.build('bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}')
+					def imagename = 'bhagya21878288/nodeapp21878288_assignment2:${env.BUILD_NUMBER}'
+					echo 'Building image: ${imagename}'
+					def img = docker.build(imagename)
 					docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-cred'){
 						echo 'pushing image'
 						img.push()
