@@ -59,10 +59,11 @@ pipeline {
 
         
     }
-  }
-  post{
-	always{
-		archiveArtifacts artifacts: 'package.json, package-lock.json, app.js, Dockerfile', fingerprint: true, followSymlinks: false
-	}
-       }
+	stage('Archive artifacts'){
+		steps{
+		     echo 'Archiving important files'
+		     archiveArtifacts artifacts: 'package.json, package-lock.json, app.js, Dockerfile', fingerprint: true, followSymlinks: false
+		}
+	}	
+}
 }
