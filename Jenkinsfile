@@ -42,24 +42,29 @@ pipeline {
 	
     stage('Build Docker Image') {
             steps {
-                echo 'Building....'
-                script {
-                	docker.build("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}") 
-		 }  
+			  script{
+                echo 'Building Docker image of app....'
+                docker.withServer('tcp://docker:2376', 'dind-certs'){
+					docker.build("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}") 
+					
+				}
+                	
+			  }
                 	
             }
         }
 	stage('Push image to docker') {
             steps {
-                echo 'pushing image....'
-                script {
+				script {
+                	echo 'pushing image....'
+                	docker.withServer('tcp://docker:2376', 'dind-certs'){
                         docker.withRegistry('https://index.docker.io/v1/','dockerhub-cred'){
-						docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push()
+							docker.image("bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}").push()
 		}  
 
             }
         }
-
+			}
         
     }
 	stage('Archive artifacts'){
