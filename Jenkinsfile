@@ -39,23 +39,21 @@ pipeline {
         }
 	
 	
-	stage('Build Docker Image') {
+	stage('Build Docker Image & push to registry') {
 		steps{
 			echo 'Building docker image of app'
-			sh 'dockerbuild -t bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}'
+			script{
+				docker.withServer('tcp://docker:2376', 'dind-certs'){
+					def img = docker.build('bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}')
+					docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-cred'){
+						echo 'pushing image'
+						img.push()
+					}
+				}
+			}
 		}
 	}
-	stage('Push image to docker') {
-            steps {
-                	echo 'pushing image....'
-                	withCredentials([usernamePassword(credentilasId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]){
-						sh '''
-							echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-							docker push bhagya21878288/nodeapp21878288_assignment2:${BUILD_NUMBER}
-						'''
-					}
-    }
-	}
+	
 	stage('Archive artifacts'){
 		steps{
 		     echo 'Archiving important files'
