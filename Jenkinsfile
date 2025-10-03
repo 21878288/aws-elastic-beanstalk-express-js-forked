@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo 'Snyk Security Scan..'
                 sh 'npm install -g snyk'  //install synk CLI
-                sh 'snyk auth 49e25c41-bfc3-4b1a-b16f-dc0791a443ac' //authenticate
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]){ sh 'snyk auth $SNYK_TOKEN' } //authenticate
 
                 script {
                         def result = sh(script: 'synk test --severity-threshold=high' , returnStatus: true)
