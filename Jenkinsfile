@@ -25,7 +25,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]){ sh 'snyk auth $SNYK_TOKEN' } //authenticate
 
                 script {
-                        def result = sh(script: 'synk test --severity-threshold=high' , returnStatus: true)
+                        def result = sh(script: 'snyk test --severity-threshold=high' , returnStatus: true)
 
                         if (result != 0) {
                                 error 'pipeline failed'
