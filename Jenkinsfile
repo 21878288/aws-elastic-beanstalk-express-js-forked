@@ -1,7 +1,7 @@
 pipeline {
     agent {
     	docker { image 'node:16'       //use node.js 16 as base image
-	         args '-u root:root'  // run as root so apt-get works below
+	         args '-u root:root'  // run as root 
 		 } 
     	}
 
