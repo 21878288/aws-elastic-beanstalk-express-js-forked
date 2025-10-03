@@ -41,14 +41,14 @@ pipeline {
 	
 	stage('Build Docker Image & push to registry') {
 		steps{
-			echo 'Building docker image of app'
+			echo "Building docker image of app"
 			script{
 				docker.withServer('tcp://docker:2376', 'dind-certs'){
-					def imagename = 'bhagya21878288/nodeapp21878288_assignment2:${env.BUILD_NUMBER}'
-					echo 'Building image: ${imagename}'
+					def imagename = "bhagya21878288/nodeapp21878288_assignment2:${env.BUILD_NUMBER}"
 					def img = docker.build(imagename)
+					echo "Building image: ${imagename}"
 					docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-cred'){
-						echo 'pushing image'
+						echo "pushing image to registry-docker hub"
 						img.push()
 					}
 				}
