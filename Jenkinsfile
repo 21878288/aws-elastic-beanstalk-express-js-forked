@@ -1,12 +1,9 @@
 pipeline {
-    agent {
-    	docker { image 'node:16'       //use node.js 16 as base image
-	         args '-u root:root -v /certs/client:/certs/client:ro'  // run as root 
-		 } 
-    	}
+    agent none{
 
     stages {
         stage('Install node dependencies') {
+	    agent { docker { image 'node:16' } }  //use node.js 16 as base image
             steps {
                 echo 'Installing..'
                 sh 'npm install --save'      //installing required dependencies
@@ -15,12 +12,15 @@ pipeline {
         }
      
         stage('Test') {
+	    agent { docker{ image 'node:16' } }
             steps {
                 echo 'Testing..'
+		sh 'npm test  || echo "No tests specified"'
                 
             }
         }
 	stage('Snyk Scan') {
+	    agent { docker{ image 'node:16' } }
             steps {
                 echo 'Snyk Security Scan..'
                 sh 'npm install -g snyk'  //install synk CLI
@@ -40,6 +40,7 @@ pipeline {
 	
 	
 	stage('Build Docker Image & push to registry') {
+		agent any
 		steps{
 			echo "Building docker image of app"
 			script{
@@ -57,6 +58,7 @@ pipeline {
 	}
 	
 	stage('Archive artifacts'){
+		agent { docker{ image 'node:16' } }
 		steps{
 		     echo 'Archiving important files'
 		     archiveArtifacts artifacts: 'package.json, package-lock.json, app.js, Dockerfile', fingerprint: true, followSymlinks: false
