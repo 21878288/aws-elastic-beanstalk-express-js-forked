@@ -1,5 +1,5 @@
 pipeline {
-    agent none{
+    agent none
 
     stages {
         stage('Install node dependencies') {
@@ -66,4 +66,4 @@ pipeline {
 	}	
 }
 }
-}
+
