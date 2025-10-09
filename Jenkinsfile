@@ -58,7 +58,6 @@ pipeline {
 	}
 	
 	stage('Archive artifacts'){
-		agent { docker{ image 'node:16' } }
 		steps{
 		     echo 'Archiving important files'
 		     archiveArtifacts artifacts: 'package.json, package-lock.json, app.js, Dockerfile', fingerprint: true, followSymlinks: false
@@ -66,4 +65,27 @@ pipeline {
 	}	
 }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
